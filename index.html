@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OptiSIFT — Metal Powder Quality Intelligence Platform</title>
+<meta name="description" content="OptiSIFT turns real-time sensing and data intelligence into trusted metal powder quality and process confidence for additive manufacturing. A Research Ireland ARC Hub project at Dublin City University.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151619'/%3E%3Ctext x='32' y='44' font-family='Arial' font-size='34' font-weight='800' fill='%23EE7D2B' text-anchor='middle'%3EO%3C/text%3E%3C/svg%3E">
+<meta property="og:title" content="OptiSIFT — Metal Powder Quality Intelligence">
+<meta property="og:description" content="Real-time powder quality assurance and process confidence for metal additive manufacturing.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#191a1c; --bg2:#202124; --panel:#25272b; --line:rgba(255,255,255,.10);
+    --ink:#f5f6f7; --text:#c4c8cd; --dim:#9aa0a6; --faint:#7c828a;
+    --orange:#ee7d2b; --orange2:#f6953c; --orange-dim:#c8631c;
+    --radius:16px; --shadow:0 18px 50px rgba(0,0,0,.4);
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; scroll-padding-top:80px; }
+  @media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
+  body{ background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; font-size:17px; line-height:1.7; -webkit-font-smoothing:antialiased; }
+  a{ color:var(--orange2); text-decoration:none; }
+  a:hover{ color:var(--orange); }
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--orange); outline-offset:3px; border-radius:4px; }
+  h1,h2,h3,h4{ color:var(--ink); font-weight:800; line-height:1.15; letter-spacing:-.01em; }
+  img,svg{ max-width:100%; display:block; }
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 clamp(20px,4vw,34px); }
+  .eyebrow{ font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.16em; color:var(--orange); margin-bottom:14px; }
+
+  /* nav */
+  header{ position:sticky; top:0; z-index:60; background:rgba(21,22,24,.86); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+  .nav{ display:flex; align-items:center; justify-content:space-between; height:66px; }
+  .wm{ font-size:1.55rem; font-weight:900; letter-spacing:.3px; }
+  .wm .w{ color:#fff; } .wm .o{ color:var(--orange); }
+  .nav-links{ display:flex; align-items:center; gap:8px; }
+  .nav-links a{ color:var(--text); font-size:.92rem; font-weight:500; padding:9px 12px; border-radius:8px; }
+  .nav-links a:hover{ color:#fff; background:rgba(255,255,255,.06); }
+  .btn{ display:inline-flex; align-items:center; gap:8px; font-size:.94rem; font-weight:700; padding:12px 22px; border-radius:10px; border:2px solid transparent; transition:transform .15s ease, background .15s ease; cursor:pointer; }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-primary{ background:var(--orange); color:#141414; border-color:var(--orange); }
+  .btn-primary:hover{ background:var(--orange2); color:#141414; }
+  .btn-ghost{ background:transparent; color:#fff; border-color:rgba(255,255,255,.28); }
+  .btn-ghost:hover{ background:rgba(255,255,255,.1); color:#fff; }
+  .nav .btn{ padding:10px 18px; }
+  .nav-toggle{ display:none; background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; }
+  @media (max-width:820px){
+    .nav-links{ display:none; position:absolute; top:66px; left:0; right:0; flex-direction:column; align-items:stretch; background:var(--bg2); border-bottom:1px solid var(--line); padding:10px 20px 16px; }
+    .nav-links.open{ display:flex; }
+    .nav-links a{ padding:12px 8px; }
+    .nav-links .btn{ text-align:center; margin-top:6px; }
+    .nav-toggle{ display:block; }
+  }
+
+  /* hero */
+  .hero{ position:relative; overflow:hidden;
+    background:
+      radial-gradient(50% 70% at 88% 20%, rgba(238,125,43,.26) 0%, rgba(238,125,43,0) 62%),
+      linear-gradient(120deg, #17181a 0%, #1e1f22 55%, #241f1b 100%); }
+  .hero-inner{ padding:clamp(64px,10vw,120px) 0 clamp(56px,8vw,96px); max-width:820px; }
+  .hero h1{ font-size:clamp(2.3rem,5vw,3.6rem); color:#fff; }
+  .hero h1 .hl{ color:var(--orange); }
+  .hero p.lead{ font-size:clamp(1.05rem,1.7vw,1.25rem); color:var(--dim); margin-top:22px; max-width:640px; }
+  .hero-cta{ display:flex; flex-wrap:wrap; gap:14px; margin-top:34px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:10px; margin-top:34px; }
+  .chip{ font-size:.82rem; font-weight:600; color:#f0d4bb; background:rgba(238,125,43,.12); border:1px solid rgba(238,125,43,.3); border-radius:999px; padding:7px 15px; }
+  .backed{ margin-top:38px; font-size:.84rem; color:var(--faint); }
+  .backed b{ color:var(--dim); font-weight:600; }
+
+  /* sections */
+  .band{ padding:clamp(60px,8vw,100px) 0; }
+  .band-alt{ background:var(--bg2); }
+  .sec-head{ max-width:720px; margin-bottom:44px; }
+  .sec-head.center{ margin:0 auto 44px; text-align:center; }
+  .sec-head h2{ font-size:clamp(1.7rem,3vw,2.4rem); color:#fff; }
+  .sec-head p{ color:var(--dim); margin-top:14px; font-size:1.05rem; }
+
+  .problem{ font-size:clamp(1.3rem,2.4vw,1.9rem); font-weight:700; color:#fff; max-width:900px; line-height:1.4; }
+  .problem .o{ color:var(--orange); }
+
+  /* platform steps */
+  .steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  @media (max-width:900px){ .steps{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:520px){ .steps{ grid-template-columns:1fr; } }
+  .step{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:28px 24px; transition:transform .2s ease, border-color .2s ease; }
+  .step:hover{ transform:translateY(-5px); border-color:rgba(238,125,43,.5); }
+  .step .ico{ height:56px; display:flex; align-items:center; }
+  .step h3{ color:var(--orange); font-size:1.15rem; letter-spacing:.04em; margin-top:16px; }
+  .step p{ color:var(--dim); font-size:.94rem; margin-top:10px; }
+
+  /* for industry */
+  .who{ display:grid; grid-template-columns:1.1fr .9fr; gap:44px; align-items:center; }
+  @media (max-width:820px){ .who{ grid-template-columns:1fr; gap:28px; } }
+  .who ul{ list-style:none; margin-top:8px; }
+  .who li{ padding:12px 0 12px 30px; position:relative; border-top:1px solid var(--line); color:var(--text); font-size:1.02rem; }
+  .who li:first-child{ border-top:none; }
+  .who li::before{ content:"→"; position:absolute; left:0; color:var(--orange); font-weight:700; }
+  .who .card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:30px; }
+  .who .card p{ color:var(--dim); margin-top:10px; }
+
+  /* video */
+  .vid{ position:relative; width:100%; max-width:900px; margin:0 auto; aspect-ratio:16/9; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); background:#000; }
+  .vid iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+  /* backed by strip */
+  .partners{ display:flex; flex-wrap:wrap; justify-content:center; gap:14px 34px; }
+  .partners span{ font-weight:700; font-size:1.05rem; color:var(--dim); }
+
+  /* contact */
+  .cta{ text-align:center; background:
+      radial-gradient(60% 100% at 50% 0%, rgba(238,125,43,.22), rgba(238,125,43,0) 60%),
+      linear-gradient(180deg,#201d1a,#1a1b1d); border-top:1px solid var(--line); }
+  .cta h2{ font-size:clamp(1.8rem,3.4vw,2.6rem); color:#fff; }
+  .cta p{ color:var(--dim); margin:16px auto 0; max-width:560px; font-size:1.08rem; }
+  .cta .btn{ margin-top:28px; }
+  .contact-details{ display:flex; flex-wrap:wrap; gap:16px 40px; margin-top:26px; text-align:left; }
+  .contact-details > div{ font-size:.96rem; color:var(--text); }
+  .contact-details span{ display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.1em; color:var(--faint); margin-bottom:4px; }
+  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; text-align:left; }
+  @media (max-width:820px){ .contact-grid{ grid-template-columns:1fr; gap:32px; } }
+  .contact-grid p{ margin:16px 0 0; max-width:none; }
+  .cform{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:28px; }
+  .frow{ margin-bottom:14px; }
+  .cform label{ display:block; font-size:.82rem; color:var(--dim); font-weight:600; }
+  .cform .opt{ color:var(--faint); font-weight:400; }
+  .cform input, .cform textarea{ width:100%; margin-top:6px; background:#1a1b1d; border:1px solid var(--line); border-radius:8px; padding:11px 13px; color:var(--ink); font-family:inherit; font-size:.96rem; }
+  .cform input:focus, .cform textarea:focus{ outline:none; border-color:var(--orange); }
+  .cform textarea{ resize:vertical; }
+  .cform .hp{ position:absolute!important; left:-9999px; }
+  .cform button{ margin-top:6px; width:100%; justify-content:center; }
+  .fstatus{ margin-top:14px; font-size:.92rem; color:var(--dim); min-height:1.2em; }
+  .fstatus.ok{ color:#5fd08a; } .fstatus.err{ color:#f0894f; }
+
+  footer{ background:#131416; border-top:1px solid var(--line); padding:40px 0 30px; }
+  .foot{ display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between; align-items:flex-start; }
+  .foot .status{ max-width:620px; font-size:.9rem; color:var(--faint); }
+  .foot .status .wm2{ font-weight:900; color:#fff; font-size:1.1rem; }
+  .foot .status .wm2 .o{ color:var(--orange); }
+  .foot-links a{ color:var(--dim); font-size:.9rem; margin-left:18px; }
+  .copyright{ margin-top:24px; padding-top:18px; border-top:1px solid var(--line); font-size:.82rem; color:var(--faint); text-align:center; }
+
+  .reveal{ opacity:0; transform:translateY(20px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion:reduce){ .reveal{ opacity:1; transform:none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="wm"><span class="w">Opti</span><span class="o">SIFT</span></a>
+    <button class="nav-toggle" aria-label="Menu" onclick="document.getElementById('nl').classList.toggle('open')">☰</button>
+    <nav class="nav-links" id="nl">
+      <a href="#platform">Platform</a>
+      <a href="#industry">For Industry</a>
+      <a href="#video">Video</a>
+      <a href="#contact" class="btn btn-primary">Pilot with us</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="eyebrow">Metal Powder Quality Intelligence Platform</div>
+      <h1>Trusted powder quality.<br><span class="hl">Confident</span> processes.</h1>
+      <p class="lead">OptiSIFT turns real-time sensing and data intelligence into powder quality assurance and process confidence for metal additive manufacturing.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#contact">Become a pilot partner</a>
+        <a class="btn btn-ghost" href="#video">Watch the video</a>
+      </div>
+      <div class="chips">
+        <span class="chip">Real-time</span>
+        <span class="chip">Non-destructive</span>
+        <span class="chip">Data-driven</span>
+        <span class="chip">Powder circularity</span>
+      </div>
+      <p class="backed">Supported by <b>Research Ireland — ARC Hub for ICT</b> &nbsp;·&nbsp; <b>Dublin City University</b></p>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="band">
+    <div class="wrap">
+      <div class="eyebrow reveal">The challenge</div>
+      <p class="problem reveal">Metal powder quality is the hidden variable in additive manufacturing. Oxidation, reuse and inconsistent feedstock drive <span class="o">defects, scrap and cost</span> — and today they are usually caught too late.</p>
+    </div>
+  </section>
+
+  <!-- PLATFORM -->
+  <section class="band band-alt" id="platform">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <div class="eyebrow">The platform</div>
+        <h2>From powder signals to process confidence</h2>
+        <p>OptiSIFT closes the loop from sensing to assurance, so you can qualify powder and reuse it with confidence.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="ico"><svg width="52" height="52" viewBox="0 0 60 60" fill="#EE7D2B"><circle cx="30" cy="30" r="4"/><circle cx="30" cy="14" r="3"/><circle cx="30" cy="46" r="3"/><circle cx="14" cy="30" r="3"/><circle cx="46" cy="30" r="3"/><circle cx="19" cy="19" r="2.6"/><circle cx="41" cy="19" r="2.6"/><circle cx="19" cy="41" r="2.6"/><circle cx="41" cy="41" r="2.6"/></svg></div>
+          <h3>SENSE</h3>
+          <p>Advanced sensing and data acquisition capture the optical and thermal signatures of metal powder in real time.</p>
+        </div>
+        <div class="step reveal">
+          <div class="ico"><svg width="60" height="52" viewBox="0 0 64 60" fill="none" stroke="#EE7D2B" stroke-width="2.4"><rect x="8" y="8" width="48" height="34" rx="3"/><path d="M16 34l9-11 8 7 11-14" stroke-linecap="round" stroke-linejoin="round"/><path d="M26 50h12M32 42v8" stroke-linecap="round"/></svg></div>
+          <h3>ANALYZE</h3>
+          <p>Intelligent algorithms turn raw signals into clear, quantitative powder-quality metrics.</p>
+        </div>
+        <div class="step reveal">
+          <div class="ico"><svg width="60" height="52" viewBox="0 0 64 60" fill="none" stroke="#EE7D2B" stroke-width="2.4"><circle cx="16" cy="16" r="6"/><circle cx="48" cy="14" r="6"/><circle cx="44" cy="44" r="6"/><circle cx="18" cy="46" r="6"/><path d="M21 18l22-2M20 22l22 18M22 42l18 2M20 40l24-22" stroke-linecap="round"/></svg></div>
+          <h3>PREDICT</h3>
+          <p>Processability and performance prediction flag reuse limits and process risk before you print.</p>
+        </div>
+        <div class="step reveal">
+          <div class="ico"><svg width="52" height="52" viewBox="0 0 60 60" fill="none" stroke="#EE7D2B" stroke-width="2.4"><path d="M30 6l18 7v13c0 12-8 19-18 24-10-5-18-12-18-24V13z" stroke-linejoin="round"/><path d="M21 30l6 6 12-13" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3>ASSURE</h3>
+          <p>Quality assurance and traceability deliver auditable powder qualification across its lifecycle.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOR INDUSTRY -->
+  <section class="band" id="industry">
+    <div class="wrap who">
+      <div class="reveal">
+        <div class="eyebrow">Who it's for</div>
+        <h2 style="font-size:clamp(1.7rem,3vw,2.3rem); color:#fff;">Built for the metal AM value chain</h2>
+        <ul>
+          <li>Metal powder producers &amp; suppliers</li>
+          <li>Additive manufacturing service bureaus &amp; OEMs</li>
+          <li>Aerospace, energy, and medical manufacturing</li>
+          <li>Quality, reliability &amp; sustainability teams</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <div class="eyebrow">Pilot programme</div>
+        <h3 style="color:#fff; font-size:1.3rem;">We're onboarding pilot partners</h3>
+        <p>We are co-developing and validating OptiSIFT on real production powders with a small number of pilot partners. If reliable powder qualification matters to you, let's talk.</p>
+        <a class="btn btn-primary" href="#contact" style="margin-top:20px;">Become a pilot partner</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section class="band band-alt" id="video">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <div class="eyebrow">See it in context</div>
+        <h2>OptiSIFT — ARC Hub for ICT</h2>
+        <p>An overview of the OptiSIFT metal powder quality intelligence platform.</p>
+      </div>
+      <div class="vid reveal"><iframe src="https://www.youtube.com/embed/_tsUDmnZMO4" title="OptiSIFT — Metal Powder Quality Intelligence Platform" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+    </div>
+  </section>
+
+  <!-- BACKED BY -->
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head center reveal" style="margin-bottom:28px;"><div class="eyebrow">Supported by</div></div>
+      <div class="partners reveal">
+        <span>Research Ireland</span>
+        <span>ARC Hub for ICT</span>
+        <span>Dublin City University</span>
+        <span>I-Form</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT / CTA -->
+  <section class="band cta" id="contact">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div class="reveal">
+          <div class="eyebrow">Let's talk</div>
+          <h2>Pilot OptiSIFT with your powders</h2>
+          <p>Interested in real-time powder quality assurance, or in partnering on a pilot? Send a message and we'll set up a conversation.</p>
+          <div class="contact-details">
+            <div><span>Company email</span><a href="mailto:optisift@gmail.com">optisift@gmail.com</a></div>
+            <div><span>Founder</span><a href="mailto:rakesh.nair@dcu.ie">rakesh.nair@dcu.ie</a></div>
+            <div><span>Based at</span>Dublin City University, Dublin 9, Ireland</div>
+          </div>
+        </div>
+        <form class="cform reveal" id="cform">
+          <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_KEY">
+          <input type="hidden" name="subject" value="New OptiSIFT enquiry from the website">
+          <input type="hidden" name="from_name" value="OptiSIFT Website">
+          <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
+          <div class="frow"><label>Name<input type="text" name="name" required></label></div>
+          <div class="frow"><label>Email<input type="email" name="email" required></label></div>
+          <div class="frow"><label>Organisation <span class="opt">(optional)</span><input type="text" name="organisation"></label></div>
+          <div class="frow"><label>Message<textarea name="message" rows="4" required></textarea></label></div>
+          <button class="btn btn-primary" type="submit">Send message</button>
+          <div class="fstatus" id="cstatus" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="status">
+        <div class="wm2"><span>Opti</span><span class="o">SIFT</span></div>
+        <p style="margin-top:8px;">A translational research project supported by the Research Ireland ARC Hub for ICT at Dublin City University, with spinout potential. Led by Dr. Rakesh Bhaskaran Nair, Principal Investigator, DCU.</p>
+      </div>
+      <div class="foot-links">
+        <a href="#platform">Platform</a>
+        <a href="#industry">For Industry</a>
+        <a href="mailto:optisift@gmail.com">optisift@gmail.com</a>
+        <a href="https://rakeshbnair.github.io/RakeshBNair/" target="_blank" rel="noopener">Founder</a>
+      </div>
+    </div>
+    <div class="copyright">© 2026 OptiSIFT · Dublin City University. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => document.getElementById('nl').classList.remove('open')));
+  const io = new IntersectionObserver((es) => { es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold:0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Contact form (Web3Forms)
+  const cform = document.getElementById('cform');
+  if(cform){
+    cform.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const status = document.getElementById('cstatus');
+      const key = cform.querySelector('[name=access_key]').value;
+      if(!key || key === 'YOUR_WEB3FORMS_KEY'){
+        status.className = 'fstatus err';
+        status.textContent = 'Form not configured yet — please email optisift@gmail.com directly.';
+        return;
+      }
+      status.className = 'fstatus'; status.textContent = 'Sending…';
+      try{
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method:'POST', headers:{'Content-Type':'application/json', Accept:'application/json'},
+          body: JSON.stringify(Object.fromEntries(new FormData(cform)))
+        });
+        const out = await res.json();
+        if(out.success){ status.className='fstatus ok'; status.textContent='Thanks — your message has been sent. We\'ll be in touch.'; cform.reset(); }
+        else{ status.className='fstatus err'; status.textContent='Sorry, something went wrong. Please email optisift@gmail.com.'; }
+      }catch(err){ status.className='fstatus err'; status.textContent='Sorry, something went wrong. Please email optisift@gmail.com.'; }
+    });
+  }
+</script>
+
+</body>
+</html>

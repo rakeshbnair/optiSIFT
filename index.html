@@ -334,7 +334,7 @@
       e.preventDefault();
       const status = document.getElementById('cstatus');
       const key = cform.querySelector('[name=access_key]').value;
-      if(!key || key === '7a549f39-4a8b-4f92-87c3-e1b4e25fe1f6'){
+      if(!key){
         status.className = 'fstatus err';
         status.textContent = 'Form not configured yet — please email optisift@gmail.com directly.';
         return;

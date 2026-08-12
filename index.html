@@ -287,7 +287,7 @@
           </div>
         </div>
         <form class="cform reveal" id="cform">
-          <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_KEY">
+          <input type="hidden" name="access_key" value="7a549f39-4a8b-4f92-87c3-e1b4e25fe1f6">
           <input type="hidden" name="subject" value="New OptiSIFT enquiry from the website">
           <input type="hidden" name="from_name" value="OptiSIFT Website">
           <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
@@ -334,7 +334,7 @@
       e.preventDefault();
       const status = document.getElementById('cstatus');
       const key = cform.querySelector('[name=access_key]').value;
-      if(!key || key === 'YOUR_WEB3FORMS_KEY'){
+      if(!key || key === '7a549f39-4a8b-4f92-87c3-e1b4e25fe1f6'){
         status.className = 'fstatus err';
         status.textContent = 'Form not configured yet — please email optisift@gmail.com directly.';
         return;
